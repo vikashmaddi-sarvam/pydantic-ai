@@ -305,6 +305,40 @@ print(result.output)
 
 For a complete list of available models, see the [SambaNova supported models documentation](https://docs.sambanova.ai/docs/en/models/sambacloud-models).
 
+## Sarvam
+
+[Sarvam Token Factory](https://docs.sarvam.ai/api/token-factory) exposes an OpenAI-compatible Chat Completions API at `https://api.sarvam.ai/v2`. Create an API key in the [Sarvam dashboard](https://indus.sarvam.ai/) and set the `SARVAM_API_KEY` environment variable.
+
+You can use [`SarvamProvider`][pydantic_ai.providers.sarvam.SarvamProvider] by name:
+
+```python
+from pydantic_ai import Agent
+
+agent = Agent('sarvam:sarvam-105b')
+result = agent.run_sync('What is the capital of France?')
+print(result.output)
+#> The capital of France is Paris.
+```
+
+Or initialise the model and provider directly:
+
+```python
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.providers.sarvam import SarvamProvider
+
+model = OpenAIChatModel(
+    'sarvam-105b',
+    provider=SarvamProvider(api_key='your-api-key'),
+)
+agent = Agent(model)
+result = agent.run_sync('What is the capital of France?')
+print(result.output)
+#> The capital of France is Paris.
+```
+
+Sarvam serves `sarvam-105b`, `sarvam-105b-conversations`, `glm5.3`, `glm5.3-flash`, `gemma4`, `deepseekv4.1-flash-1017`, and `deepseekv4.1-flash-1017-interactive`. `sarvam-105b` reasons by default; set `thinking=False` in [`ModelSettings`][pydantic_ai.settings.ModelSettings] for short replies. `sarvam-105b` and `sarvam-105b-conversations` use `max_tokens` rather than `max_completion_tokens`.
+
 ## Stav
 
 [Stav](https://stav.ai) is a European AI inference gateway: one API key for models from many labs, addressed as `creator/model` (for example `deepseek-ai/deepseek-v4-flash-0731` or `mistral-ai/mistral-large-4`), with the option to keep compute in the EU or EEA. Create an API key on the [API keys page](https://stav.ai/app/connect/api-keys) of your Stav workspace.

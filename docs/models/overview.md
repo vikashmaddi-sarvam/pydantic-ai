@@ -48,6 +48,7 @@ Pass a name in the form `<provider>:<model>` to [`Agent`][pydantic_ai.Agent] to 
 | [Otari](compatible-apis.md#otari) | Gateway | `otari:` |
 | [OVHcloud AI Endpoints](compatible-apis.md#ovhcloud-ai-endpoints) | Cloud platform | `ovhcloud:` |
 | [SambaNova](compatible-apis.md#sambanova) | Inference platform | `sambanova:` |
+| [Sarvam Token Factory](compatible-apis.md#sarvam) | Inference platform | `sarvam:` |
 | [Snowflake Cortex](snowflake.md) | Cloud platform | `snowflake:` |
 | [Stav](compatible-apis.md#stav) | Gateway | `stav:` |
 | [System One API](system-one.md) | [Decision models](decision.md) such as CLM, Laya, and Ollama's | `system-one:` |

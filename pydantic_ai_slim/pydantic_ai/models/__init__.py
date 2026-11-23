@@ -310,6 +310,7 @@ OpenAIChatCompatibleProvider = TypeAliasType(
         'otari',
         'ovhcloud',
         'sambanova',
+        'sarvam',
         'snowflake',
         'stav',
         'together',
