@@ -506,6 +506,39 @@ The [API key documentation](https://docs.oracle.com/en-us/iaas/Content/generativ
 !!! note "Allow API keys in an IAM policy"
     An API key works only once an IAM policy lets API keys use Generative AI. To authorize every key in a compartment, create the policy before the key. To limit the policy to one key, create the key first and use its OCID. See [Adding Key Permissions](https://docs.oracle.com/en-us/iaas/Content/generative-ai/add-api-permission.htm) for the policy statements.
 
+### Sarvam Token Factory {#sarvam-token-factory}
+
+[Sarvam Token Factory](https://docs.sarvam.ai/api/token-factory) exposes an OpenAI-compatible Chat Completions API at `https://api.sarvam.ai/v2`. Set `SARVAM_API_KEY` and pass a Sarvam-specific profile:
+
+```python
+import os
+
+from pydantic_ai import Agent
+from pydantic_ai.models.openai import OpenAIChatModel
+from pydantic_ai.profiles.openai import OpenAIModelProfile
+from pydantic_ai.providers.openai_compatible import OpenAICompatibleProvider
+
+provider = OpenAICompatibleProvider(
+    'sarvam',
+    base_url='https://api.sarvam.ai/v2',
+    api_key=os.environ['SARVAM_API_KEY'],
+    profile=OpenAIModelProfile(openai_chat_supports_max_completion_tokens=False),
+)
+model = OpenAIChatModel('sarvam-105b', provider=provider)
+agent = Agent(model)
+result = agent.run_sync('What is the capital of France?')
+print(result.output)
+#> The capital of France is Paris.
+```
+
+Sarvam serves `sarvam-105b`, `sarvam-105b-conversations`, `glm5.3`, `glm5.3-flash`, `gemma4`, `deepseekv4.1-flash-1017`, and `deepseekv4.1-flash-1017-interactive`.
+
+- `sarvam-105b` reasons by default. Set `thinking=False` in [`ModelSettings`][pydantic_ai.settings.ModelSettings] or `openai_reasoning_effort='none'` to disable it.
+- `glm5.3` and `glm5.3-flash` accept `low`, `high`, and `max`.
+- `gemma4` keeps reasoning off unless requested.
+- `deepseekv4.1-flash-1017` accepts `none`, `low`, `high`, and `max`.
+- `sarvam-105b` and `sarvam-105b-conversations` use `max_tokens`; the profile above sets `openai_chat_supports_max_completion_tokens=False`. The other models accept `max_completion_tokens`.
+
 ## Non-standard finish reasons
 
 When an OpenAI-compatible API returns a `finish_reason` outside the five that OpenAI defines, `OpenAIChatModel` keeps the response, gives it a [`finish_reason`][pydantic_ai.messages.ModelResponse.finish_reason] of `None`, and keeps the raw value in [`provider_details['finish_reason']`][pydantic_ai.messages.ModelResponse.provider_details].
